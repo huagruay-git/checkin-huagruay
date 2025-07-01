@@ -82,6 +82,43 @@ async function fetchBranches() {
   }
 }
 
+// ฟังก์ชันบีบอัดรูปภาพ
+function compressImage(base64Str, maxWidth = 800, quality = 0.8) {
+    return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.src = base64Str;
+
+        img.onload = () => {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+
+            let width = img.width;
+            let height = img.height;
+
+            // ปรับขนาดรูปภาพ (ถ้าความกว้างเกิน maxWidth)
+            if (width > maxWidth) {
+                height = height * (maxWidth / width);
+                width = maxWidth;
+            }
+
+            canvas.width = width;
+            canvas.height = height;
+
+            // วาดรูปภาพลงบน Canvas
+            ctx.drawImage(img, 0, 0, width, height);
+
+            // บีบอัดรูปภาพเป็น JPEG และแปลงเป็น Base64
+            // quality ค่าอยู่ระหว่าง 0.0 ถึง 1.0
+            const compressedBase64 = canvas.toDataURL('image/jpeg', quality);
+            resolve(compressedBase64);
+        };
+
+        img.onerror = (error) => {
+            reject(error);
+        };
+    });
+}
+
 // 4. แสดงสาขาใน Dropdown
 function populateBranchDropdown() {
   branchSelect.innerHTML = '<option value="">-- เลือกสาขา --</option>'; // เพิ่มตัวเลือกเริ่มต้น
@@ -142,12 +179,49 @@ function setupEventListeners() {
 }
 
 // 7. จัดการเมื่อผู้ใช้เลือกรูป
-function handlePhotoSelect(event) {
-  const file = event.target.files[0];
-  if (!file) {
-    clearPhoto(); // ถ้าไม่มีไฟล์ ก็เคลียร์รูป
-    return;
-  }
+async function handlePhotoSelect(event) { // เปลี่ยนเป็น async function
+    const file = event.target.files[0];
+    if (!file) {
+        clearPhoto();
+        return;
+    }
+
+    const MAX_FILE_SIZE = 5 * 1024 * 1024; // ตรวจสอบขนาดไฟล์ก่อนบีบอัด (5MB)
+    if (file.size > MAX_FILE_SIZE) {
+        alert("ขนาดรูปภาพใหญ่เกินไป (สูงสุด 5MB) โปรดเลือกรูปที่เล็กลง");
+        clearPhoto();
+        return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = async function(e) { // เปลี่ยนเป็น async function
+        const originalBase64 = e.target.result;
+
+        // แสดง loading ชั่วคราวขณะบีบอัด
+        showLoading(true, "กำลังบีบอัดรูปภาพ...");
+
+        try {
+            // เรียกฟังก์ชันบีบอัดรูปภาพ
+            // สามารถปรับ maxWidth และ quality ได้ตามต้องการ
+            base64Image = await compressImage(originalBase64, 800, 0.7); // บีบอัดให้เหลือไม่เกิน 800px กว้าง, คุณภาพ 70%
+
+            previewImg.src = base64Image;
+            previewImg.style.display = "block";
+            capturePhotoBtn.style.display = "none";
+            clearPhotoBtn.style.display = "inline-block";
+            checkAndToggleButtons();
+
+        } catch (error) {
+            alert("เกิดข้อผิดพลาดในการบีบอัดรูปภาพ: " + error.message);
+            console.error("Image Compression Error:", error);
+            clearPhoto(); // เคลียร์รูปถ้าบีบอัดไม่สำเร็จ
+        } finally {
+            showLoading(false); // ซ่อน loading ไม่ว่าจะสำเร็จหรือไม่
+        }
+    };
+    reader.readAsDataURL(file);
+}
+
 
   // ตรวจสอบขนาดไฟล์ (เช่น ไม่เกิน 5MB)
   const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
