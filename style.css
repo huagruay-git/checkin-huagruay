@@ -1,0 +1,265 @@
+/* -- สีหลักของ Theme -- */
+:root {
+    --primary-color: #ffd700; /* เหลืองทอง */
+    --secondary-color: #333333; /* ดำเข้ม */
+    --background-color: #1a1a1a; /* พื้นหลังดำ */
+    --text-color: #e0e0e0; /* สีตัวอักษรหลัก */
+    --card-bg-color: #2a2a2a; /* พื้นหลังการ์ด */
+    --border-color: #444444; /* สีเส้นขอบ */
+    --success-color: #28a745;
+    --info-color: #007bff;
+    --danger-color: #dc3545;
+    --warning-color: #ffc107;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* เปลี่ยนเป็น flex-start เพื่อให้เนื้อหาเริ่มจากด้านบน */
+    min-height: 100vh;
+    overflow-y: auto; /* ให้เลื่อนได้หากเนื้อหาเกิน */
+    box-sizing: border-box;
+}
+
+.container {
+    width: 100%;
+    max-width: 600px; /* จำกัดความกว้างสูงสุด */
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+h1 {
+    color: var(--primary-color);
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 1.8em;
+}
+
+/* --- Overlay โหลด --- */
+#loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9); /* ดำโปร่งแสง */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: var(--primary-color);
+    z-index: 1000;
+}
+
+.loader {
+    border: 8px solid rgba(255, 255, 255, 0.3);
+    border-top: 8px solid var(--primary-color);
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: spin 1s linear infinite;
+    margin-bottom: 20px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* --- ส่วน Header & Card --- */
+.header-section {
+    background-color: var(--card-bg-color);
+    border-radius: 12px;
+    padding: 15px 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--border-color);
+}
+
+#profile p {
+    text-align: center;
+    font-size: 1.1em;
+    margin: 0;
+}
+
+#profile strong {
+    color: var(--primary-color);
+}
+
+.card-section {
+    background-color: var(--card-bg-color);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--border-color);
+}
+
+.card-section p {
+    font-size: 0.95em;
+    margin-bottom: 15px;
+    line-height: 1.5;
+}
+
+.styled-select {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    background-color: var(--background-color);
+    color: var(--text-color);
+    font-size: 1em;
+    appearance: none; /* ลบลูกศรเริ่มต้นของ select */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292%22%20height%3D%22292%22%3E%3Cpath%20fill%3D%22%23e0e0e0%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-24.6%200L146%20186.3%2031.5%2069.4a17.6%2017.6%200%200%200-24.6%2024.6l130.7%20130.7a17.6%2017.6%200%200%200%2024.6%200L287%2094a17.6%2017.6%200%200%200%200-24.6z%22%2F%3E%3C%2Fsvg%3E'); /* เพิ่มลูกศรเอง */
+    background-repeat: no-repeat;
+    background-position: right 12px top 50%;
+    background-size: 16px auto;
+    cursor: pointer;
+    margin-bottom: 15px;
+}
+
+.styled-select option {
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+
+.current-location {
+    font-size: 0.9em;
+    color: #999;
+}
+
+.warning-message {
+    color: var(--warning-color);
+    font-weight: bold;
+    text-align: center;
+    margin-top: 10px;
+}
+
+/* --- ส่วนจัดการรูปภาพ --- */
+.photo-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+#preview {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    margin-bottom: 10px;
+}
+
+/* --- ปุ่มหลัก --- */
+.action-btn {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    border-radius: 8px;
+    border: none;
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    text-align: center;
+    margin-bottom: 10px; /* ระยะห่างระหว่างปุ่ม */
+}
+
+.action-btn:last-child {
+    margin-bottom: 0;
+}
+
+.action-btn:disabled {
+    background-color: #555;
+    color: #ccc;
+    cursor: not-allowed;
+}
+
+/* สีปุ่ม */
+.primary-btn {
+    background-color: var(--primary-color);
+    color: var(--secondary-color);
+}
+.primary-btn:hover:not(:disabled) {
+    background-color: #ffe033;
+    transform: translateY(-2px);
+}
+
+.success-btn {
+    background-color: var(--success-color);
+    color: white;
+}
+.success-btn:hover:not(:disabled) {
+    background-color: #218838;
+    transform: translateY(-2px);
+}
+
+.info-btn {
+    background-color: var(--info-color);
+    color: white;
+}
+.info-btn:hover:not(:disabled) {
+    background-color: #0069d9;
+    transform: translateY(-2px);
+}
+
+.danger-btn {
+    background-color: var(--danger-color);
+    color: white;
+}
+.danger-btn:hover:not(:disabled) {
+    background-color: #c82333;
+    transform: translateY(-2px);
+}
+
+.secondary-btn {
+    background-color: var(--border-color);
+    color: var(--text-color);
+}
+.secondary-btn:hover:not(:disabled) {
+    background-color: #555;
+    transform: translateY(-2px);
+}
+
+.button-section {
+    margin-top: 20px;
+}
+
+/* --- ข้อความสำเร็จ --- */
+#success-message {
+    text-align: center;
+    color: var(--success-color);
+    font-size: 1.2em;
+    font-weight: bold;
+}
+#success-message h2 {
+    color: var(--primary-color);
+    margin-bottom: 10px;
+}
+
+/* Responsive ปรับสำหรับหน้าจอเล็ก */
+@media (max-width: 600px) {
+    .container {
+        padding: 15px;
+    }
+    h1 {
+        font-size: 1.5em;
+    }
+    .action-btn {
+        padding: 12px;
+        font-size: 1em;
+    }
+    .styled-select {
+        padding: 10px;
+        font-size: 0.9em;
+    }
+}
