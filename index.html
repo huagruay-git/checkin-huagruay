@@ -1,55 +1,56 @@
 <!DOCTYPE html>
-<html lang="th">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ระบบลงเวลาพนักงาน</title>
-    
-    <link rel="stylesheet" href="./style.css"> 
-    
-    <script charset="utf-8" src="https://static.line-scdn.net/liff/sdk/v2/liff.js"></script>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="/style.css" />
+    <title>ระบบลงเวลา</title>
 </head>
 <body>
-    <div id="loading-overlay">
-        <div class="spinner"></div>
-        <p>กำลังโหลด...</p>
-    </div>
+    <div class="container">
+        <div id="loading-overlay">
+            <div class="loader"></div>
+            <p>กำลังโหลดข้อมูล...</p>
+        </div>
 
-    <div id="app-content" style="display: none;">
-        <div class="container">
-            <h1>ระบบลงเวลาพนักงาน</h1>
-            <p>สวัสดี: <span id="displayName"></span></p>
-
-            <div class="form-group">
-                <label for="branchSelect">เลือกสาขา:</label>
-                <select id="branchSelect"></select>
+        <div id="app-content" style="display:none;">
+            <div class="header-section">
+                <h1>ระบบลงเวลาพนักงาน</h1>
+                <div id="profile">
+                    <p>สวัสดี, <strong id="displayName"></strong></p>
+                </div>
             </div>
 
-            <p id="userLocationDisplay">พิกัดของคุณ: กำลังค้นหา...</p>
-            <p id="rangeWarning" class="warning-message" style="display: none;">คุณอยู่นอกระยะของสาขาที่เลือก!</p>
+            <div class="card-section">
+                <p>กรุณาเลือกสาขาที่คุณต้องการ Check-in/out</p>
+                <select id="branchSelect" class="styled-select"></select>
+                <p class="current-location" id="userLocationDisplay">พิกัดของคุณ: กำลังค้นหา...</p>
+                <p class="warning-message" id="rangeWarning" style="display:none;">⚠️ คุณอยู่นอกระยะที่อนุญาตสำหรับสาขาที่เลือก</p>
+            </div>
 
-            <div id="photoArea" class="photo-area">
+            <div class="card-section">
+                <p>กรุณาถ่ายรูปเพื่อยืนยันตัวตน</p>
                 <input type="file" id="photoInput" accept="image/*" capture="environment" style="display: none;">
-                <img id="preview" src="#" alt="Photo Preview" style="display: none;">
-                <button id="capturePhotoBtn" class="btn primary">ถ่ายรูป</button>
-                <button id="clearPhotoBtn" class="btn danger" style="display: none;">ลบรูป</button>
+                <div class="photo-area" id="photoArea">
+                    <img id="preview" src="#" alt="รูปตัวอย่าง" style="display:none;"/>
+                    <button id="capturePhotoBtn" class="action-btn primary-btn">📸 ถ่ายรูป</button>
+                    <button id="clearPhotoBtn" class="action-btn danger-btn" style="display:none;">✖️ ลบรูปและถ่ายใหม่</button>
+                </div>
             </div>
 
-            <div class="button-group">
-                <button id="checkinBtn" class="btn success" disabled>Check-in</button>
-                <button id="checkoutBtn" class="btn warning" disabled>Check-out</button>
+            <div class="button-section">
+                <button id="checkinBtn" class="action-btn success-btn" disabled>✅ เช็กอินเข้างาน</button>
+                <button id="checkoutBtn" class="action-btn info-btn" disabled>❌ เช็กเอาท์ออกงาน</button>
+            </div>
+
+            <div id="success-message" class="card-section" style="display:none;">
+                <h2>บันทึกข้อมูลสำเร็จ!</h2>
+                <p>ระบบได้บันทึกการลงเวลาของคุณเรียบร้อยแล้ว</p>
+                <button class="action-btn secondary-btn" onclick="liff.closeWindow()">ปิดหน้าต่าง</button>
             </div>
         </div>
     </div>
-
-    <div id="successModal" class="modal" style="display: none;">
-        <div class="modal-content">
-            <h2><span id="successStatus"></span> สำเร็จ!</h2>
-            <p>ระบบได้บันทึกข้อมูลของคุณเรียบร้อยแล้ว</p>
-            <p>หน้านี้จะปิดใน <span id="countdown">3</span> วินาที</p>
-        </div>
-    </div>
-    
-    <script src="./script.js"></script> 
+    <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+    <script src="/script.js"></script>
 </body>
 </html>
