@@ -12,10 +12,6 @@ let selectedBranchLng = null;
 let selectedBranchRadius = null;
 
 // --- DOM Elements ---
-const successMessageDiv = document.getElementById("success-message"); 
-const successModal = document.getElementById("successModal"); 
-const successStatusSpan = document.getElementById("successStatus"); 
-const countdownSpan = document.getElementById("countdown"); 
 const loadingOverlay = document.getElementById("loading-overlay");
 const appContentDiv = document.getElementById("app-content");
 const displayNameSpan = document.getElementById("displayName");
@@ -29,20 +25,19 @@ const capturePhotoBtn = document.getElementById("capturePhotoBtn");
 const clearPhotoBtn = document.getElementById("clearPhotoBtn");
 const checkinBtn = document.getElementById("checkinBtn");
 const checkoutBtn = document.getElementById("checkoutBtn");
+const successMessageDiv = document.getElementById("success-message");
 
 // --- Functions ---
 
 // 1. ฟังก์ชันเริ่มต้นทั้งหมดเมื่อ LIFF โหลด
-document.addEventListener('DOMContentLoaded', async () => {
-    showLoading(true, "กำลังเริ่มต้น LIFF...");
-    await initializeLiff();
-    await fetchBranches();
-    await getUserLocation();
-    setupEventListeners();
-    updateUI();
-});
-
-
+window.onload = async function () {
+  showLoading(true, "กำลังเริ่มต้น LIFF...");
+  await initializeLiff();
+  await fetchBranches();
+  await getUserLocation();
+  setupEventListeners();
+  updateUI();
+};
 
 // 2. เริ่มต้นการทำงานของ LIFF
 async function initializeLiff() {
@@ -281,7 +276,7 @@ async function sendData(checkType) {
 
     const result = await response.json(); // อ่าน response
     if (result.status === "success") {
-      showSuccessModal(checkType); 
+      showSuccessMessage();
     } else {
       alert("เกิดข้อผิดพลาดในการบันทึก: " + result.message);
       console.error("GAS Error:", result.message);
@@ -300,35 +295,17 @@ async function sendData(checkType) {
 }
 
 // 12. แสดงข้อความสำเร็จ
-function showSuccessModal(checkType) {
-    showLoading(false); // ซ่อน Loading
-    appContentDiv.style.display = "none"; // ซ่อนเนื้อหาหลัก
-    successModal.style.display = "flex"; // แสดง Modal (ใช้ flex เพื่อจัดกึ่งกลาง)
+function showSuccessMessage() {
+  showLoading(false);
+  appContentDiv.style.display = "none";
+  successMessageDiv.style.display = "block";
 
-    successStatusSpan.textContent = checkType; // แสดง "Check-in" หรือ "Check-out"
-
-    let countdown = 3;
-    countdownSpan.textContent = countdown;
-
-    const interval = setInterval(() => {
-        countdown--;
-        countdownSpan.textContent = countdown;
-        if (countdown <= 0) {
-            clearInterval(interval); // หยุดนับถอยหลัง
-            if (liff.isInClient()) {
-                liff.closeWindow(); // ปิดหน้าต่าง LIFF
-            } else {
-                // สำหรับทดสอบบน Browser ทั่วไป
-                alert(`${checkType} สำเร็จ! (หน้านี้จะปิดใน LIFF)`);
-                successModal.style.display = "none"; // ซ่อน modal ถ้าไม่ได้อยู่ใน LIFF
-                appContentDiv.style.display = "block"; // แสดงเนื้อหาหลักกลับมา
-                // รีเซ็ตค่าต่างๆ เพื่อให้สามารถ Check-in/out ใหม่ได้
-                clearPhoto();
-                branchSelect.value = "";
-                checkAndToggleButtons();
-            }
-        }
-    }, 1000); // นับถอยหลังทุก 1 วินาที
+  // ปิดหน้าต่าง LIFF หลังจาก 3 วินาที
+  setTimeout(() => {
+    if (liff.isInClient()) {
+      liff.closeWindow();
+    }
+  }, 3000);
 }
 
 // 13. จัดการการแสดง/ซ่อน Loading Overlay
