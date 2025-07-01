@@ -1,159 +1,56 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="/style.css" />
+    <title>ระบบลงเวลา</title>
+</head>
+<body>
+    <div class="container">
+        <div id="loading-overlay">
+            <div class="loader"></div>
+            <p>กำลังโหลดข้อมูล...</p>
+        </div>
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+        <div id="app-content" style="display:none;">
+            <div class="header-section">
+                <h1>ระบบลงเวลาพนักงาน</h1>
+                <div id="profile">
+                    <p>สวัสดี, <strong id="displayName"></strong></p>
+                </div>
+            </div>
 
-    <title>ITDEV.win</title>
-  </head>
-  <body>
-    <center>
-<div class="container">
-  <div class="card shadow-sm p-4">
-    <h3 class="text-center mb-3">📍 บันทึกการเข้า-ออกงาน</h3>
-    <p class="text-center text-muted">กรุณาอัปโหลดรูปภาพก่อนเช็คอิน/เอาท์</p>
+            <div class="card-section">
+                <p>กรุณาเลือกสาขาที่คุณต้องการ Check-in/out</p>
+                <select id="branchSelect" class="styled-select"></select>
+                <p class="current-location" id="userLocationDisplay">พิกัดของคุณ: กำลังค้นหา...</p>
+                <p class="warning-message" id="rangeWarning" style="display:none;">⚠️ คุณอยู่นอกระยะที่อนุญาตสำหรับสาขาที่เลือก</p>
+            </div>
 
-    <img id="previewImg" src="#">
+            <div class="card-section">
+                <p>กรุณาถ่ายรูปเพื่อยืนยันตัวตน</p>
+                <input type="file" id="photoInput" accept="image/*" capture="environment" style="display: none;">
+                <div class="photo-area" id="photoArea">
+                    <img id="preview" src="#" alt="รูปตัวอย่าง" style="display:none;"/>
+                    <button id="capturePhotoBtn" class="action-btn primary-btn">📸 ถ่ายรูป</button>
+                    <button id="clearPhotoBtn" class="action-btn danger-btn" style="display:none;">✖️ ลบรูปและถ่ายใหม่</button>
+                </div>
+            </div>
 
-    <div class="form-group">
-      <input type="file" class="form-control-file" id="imageInput" accept="image/*" onchange="previewImage()">
+            <div class="button-section">
+                <button id="checkinBtn" class="action-btn success-btn" disabled>✅ เช็กอินเข้างาน</button>
+                <button id="checkoutBtn" class="action-btn info-btn" disabled>❌ เช็กเอาท์ออกงาน</button>
+            </div>
+
+            <div id="success-message" class="card-section" style="display:none;">
+                <h2>บันทึกข้อมูลสำเร็จ!</h2>
+                <p>ระบบได้บันทึกการลงเวลาของคุณเรียบร้อยแล้ว</p>
+                <button class="action-btn secondary-btn" onclick="liff.closeWindow()">ปิดหน้าต่าง</button>
+            </div>
+        </div>
     </div>
-
-    <div class="text-center mt-4">
-      <button class="btn btn-success btn-block mb-2" onclick="getLocation('In')">✅ Check-In</button>
-      <button class="btn btn-danger btn-block" onclick="getLocation('Out')">🚪 Check-Out</button>
-    </div>
-
-    <p id="demo" class="mt-3 text-center small text-muted"></p>
-  </div>
-</div>
-
-<p id="demo"></p>
-</center>
-
-<script>
-window.onload = function() {
-  initializeLiff('1654370606-geWqlVLk');
-}
-
-const xurl = "https://script.google.com/macros/s/AKfycbz-krIX4x26C_hIFECOy5i0EvLPIMIeKiSPD4kswFJXznuGFE4/exec";
-
-function checks(){
-
-var today = new Date();
-today.toLocaleString('th-TH', { timeZone: 'Asia/Bangkok' })
-var hh = today.getHours();
-var mm = today.getMinutes(); 
-
-        if(hh <= 13){
-          document.getElementById("cin").classList.remove('invisible');
-        }else if(hh >= 17){
-          document.getElementById("cout").classList.remove('invisible');
-            }else{
-alert("ไม่สามารถเช็คอิน/เอาท์ได้ในช่วงเวลา 13.00-17.00 "+hh+":"+mm);
-liff.closeWindow();  
-            }
-}
-
-
-function initializeLiff(myLiffId) {
-    liff
-        .init({
-            liffId: myLiffId
-        })
-        .then(() => {
-            checks();
-        })
-        .catch((err) => {
-        });
-}
-
-var x = document.getElementById("demo");
-
-function getLocation() {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(showPosition);
-  } else { 
-    x.innerHTML = "Geolocation is not supported by this browser.";
-  }
-}
-
-function showPosition(position) {
-
-     liff.getProfile().then(function(profile) {
-            var uid = profile.userId;
-            var uname = profile.displayName;
-        var xos = liff.getOS();
-  x.innerHTML = "Lat: " + position.coords.latitude + 
-  "<br>Long: " + position.coords.longitude+ 
-  "<br>userId: " + uid+ 
-  "<br>displayName: " + uname+
-  "<br>your OS: " + xos;
-var xmlhttp = new XMLHttpRequest();
-        var theUrl = xurl+"?ctype=In&xos="+xos+"&user="+uid+"&name="+uname+"&lat="+position.coords.latitude+"&long="+position.coords.longitude;
-        xmlhttp.open('GET', theUrl);
-        xmlhttp.send();
-            xmlhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            var jsonResponse = JSON.parse(this.responseText);
-        }
-        alert(jsonResponse.desc);
-        liff.closeWindow();
-      }});  
-}
-
-
-
-///////////////////////////////
-
-
-function getLocationOut() {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(showPositionOut);
-  } else { 
-    x.innerHTML = "Geolocation is not supported by this browser.";
-  }
-}
-
-function showPositionOut(position) {
-
-     liff.getProfile().then(function(profile) {
-            var uid = profile.userId;
-            var uname = profile.displayName;
-        var xos = liff.getOS();
-  x.innerHTML = "Lat: " + position.coords.latitude + 
-  "<br>Long: " + position.coords.longitude+ 
-  "<br>userId: " + uid+ 
-  "<br>displayName: " + uname+
-  "<br>your OS: " + xos;
-var xmlhttp = new XMLHttpRequest();
-        var theUrl = xurl+"?ctype=Out&xos="+xos+"&user="+uid+"&name="+uname+"&lat="+position.coords.latitude+"&long="+position.coords.longitude;
-        xmlhttp.open('GET', theUrl);
-        xmlhttp.send();
-            xmlhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            var jsonResponse = JSON.parse(this.responseText);
-        }
-        alert(jsonResponse.desc);
-        liff.closeWindow();
-      }});  
-}
-
-
-
-</script>
-
-
-
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
-  </body>
+    <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+    <script src="/script.js"></script>
+</body>
 </html>
