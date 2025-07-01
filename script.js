@@ -299,7 +299,6 @@ async function sendData(checkType) {
 }
 
 // 12. แสดงข้อความสำเร็จ
-// 12. แสดงข้อความสำเร็จ (เปลี่ยนชื่อเป็น showSuccessModal และปรับ Logic)
 function showSuccessModal(checkType) {
     showLoading(false); // ซ่อน Loading
     appContentDiv.style.display = "none"; // ซ่อนเนื้อหาหลัก
