@@ -33,14 +33,16 @@ const checkoutBtn = document.getElementById("checkoutBtn");
 // --- Functions ---
 
 // 1. ฟังก์ชันเริ่มต้นทั้งหมดเมื่อ LIFF โหลด
-window.onload = async function () {
-  showLoading(true, "กำลังเริ่มต้น LIFF...");
-  await initializeLiff();
-  await fetchBranches();
-  await getUserLocation();
-  setupEventListeners();
-  updateUI();
-};
+document.addEventListener('DOMContentLoaded', async () => {
+    showLoading(true, "กำลังเริ่มต้น LIFF...");
+    await initializeLiff();
+    await fetchBranches();
+    await getUserLocation();
+    setupEventListeners();
+    updateUI();
+});
+
+
 
 // 2. เริ่มต้นการทำงานของ LIFF
 async function initializeLiff() {
