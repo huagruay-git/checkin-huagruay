@@ -29,7 +29,6 @@ const capturePhotoBtn = document.getElementById("capturePhotoBtn");
 const clearPhotoBtn = document.getElementById("clearPhotoBtn");
 const checkinBtn = document.getElementById("checkinBtn");
 const checkoutBtn = document.getElementById("checkoutBtn");
-const successMessageDiv = document.getElementById("success-message");
 
 // --- Functions ---
 
