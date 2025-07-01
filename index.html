@@ -12,12 +12,25 @@
   </head>
   <body>
     <center>
-    <h1>Check-In/Out Log</h1>
-<p>Click the button to check-in or check-out with your coordinates.</p>
-<p>แนบรูปภาพ (เซลฟี่หรือสถานที่)</p>
-<input type="file" accept="image/*" id="imageInput">
-<div id="cin" class="invisible"><button type="button" class="btn btn-success" onclick="getLocation()">Check-In</button></div>
-<div id="cout" class="invisible"><button id="cout" type="button" class="btn btn-danger" onclick="getLocationOut()">Check-Out</button></div>
+<div class="container">
+  <div class="card shadow-sm p-4">
+    <h3 class="text-center mb-3">📍 บันทึกการเข้า-ออกงาน</h3>
+    <p class="text-center text-muted">กรุณาอัปโหลดรูปภาพก่อนเช็คอิน/เอาท์</p>
+
+    <img id="previewImg" src="#">
+
+    <div class="form-group">
+      <input type="file" class="form-control-file" id="imageInput" accept="image/*" onchange="previewImage()">
+    </div>
+
+    <div class="text-center mt-4">
+      <button class="btn btn-success btn-block mb-2" onclick="getLocation('In')">✅ Check-In</button>
+      <button class="btn btn-danger btn-block" onclick="getLocation('Out')">🚪 Check-Out</button>
+    </div>
+
+    <p id="demo" class="mt-3 text-center small text-muted"></p>
+  </div>
+</div>
 
 <p id="demo"></p>
 </center>
